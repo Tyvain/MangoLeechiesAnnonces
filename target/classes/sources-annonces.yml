@@ -1,0 +1,89 @@
+- !leechies.model.Source
+  rootUrl: https://annonces.nc/
+  className: leechies.sites.GenericWamSite
+  rubriques:    
+    - !leechies.model.Rubrique    
+      category: INFORMATIQUE
+      subUrls:
+        - rubrique_technologie
+        - rubrique_informatique
+        - rubrique_tablettes_tactiles
+    - !leechies.model.Rubrique    
+      category: CONSOLE_JEUX
+      subUrls:
+        - rubrique_jeux_consoles_et_pc
+    - !leechies.model.Rubrique    
+      category: INFORMATIQUE
+      subUrls:
+        - rubrique_technologie
+        - rubrique_informatique
+        - rubrique_tablettes_tactiles
+    - !leechies.model.Rubrique    
+      category: IMAGE_SON
+      subUrls:
+        - rubrique_tv_video
+        - rubrique_appareils_photos
+        - rubrique_appareils_audio
+    - !leechies.model.Rubrique    
+      category: MUSIQUE
+      subUrls:
+        - rubrique_musique
+    - !leechies.model.Rubrique    
+      category: DVD_LIVRES
+      subUrls:
+        - rubrique_cd_dvd_b_ray_vinyls
+        - rubrique_livres_revues_bd
+    - !leechies.model.Rubrique    
+      category: TELEPHONIE
+      subUrls:
+        - rubrique_telephonie
+    - !leechies.model.Rubrique    
+      category: SPORT_HOBBIES
+      subUrls:
+        - rubrique_sports_loisirs
+        - rubrique_velo
+    - !leechies.model.Rubrique    
+      category: COLLECTION
+      subUrls:
+        - rubrique_collections
+    - !leechies.model.Rubrique    
+      category: JEUX_JOUETS
+      subUrls:
+        - rubrique_jouets_jeux_de_societe
+        - rubrique_modelisme
+        - rubrique_armes_airsoft
+    - !leechies.model.Rubrique    
+      category: VIN_GASTRONOMIE
+      subUrls:
+        - rubrique_fruits_et_legumes_du_jardin
+    - !leechies.model.Rubrique    
+      category: ELECTROMENAGER
+      subUrls:
+        - rubrique_electromenager
+    - !leechies.model.Rubrique    
+      category: BRICOLAGE
+      subUrls:
+        - rubrique_bricolage
+    - !leechies.model.Rubrique    
+      category: JARDINAGE
+      subUrls:
+        - rubrique_jardinage
+    - !leechies.model.Rubrique    
+      category: ANIMAUX
+      subUrls:
+        - rubrique_animaux
+    - !leechies.model.Rubrique    
+      category: MAISON_DIVERS
+      subUrls:
+        - rubrique_art_deco
+        - rubrique_bijoux
+        - rubrique_puericulture
+        - rubrique_vide_grenier
+    - !leechies.model.Rubrique    
+      category: TROC
+      subUrls:
+        - rubrique_echange_troc
+    - !leechies.model.Rubrique    
+      category: PERDU_TROUVE
+      subUrls:
+        - rubrique_perdus_trouves

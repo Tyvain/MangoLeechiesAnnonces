@@ -1,0 +1,8 @@
+- !leechies.model.Source
+  rootUrl: http://www.immobilier.nc/
+  className: leechies.sites.ImmobilierNcWamSite
+  rubriques:    
+    - !leechies.model.Rubrique    
+      category: VENTES
+      subUrls:
+        - recherche?section=offres_vente&bien=&prix_location=&prix_vente=&pays=nc&ville=&quartier=&par_page=25&orderBy=&orderDirection=DESC&moteurRecherche_option=last_offre

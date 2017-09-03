@@ -1,0 +1,150 @@
+- !leechies.model.Source
+  rootUrl: https://annonces.nc/
+  rubriques:    
+    - !leechies.model.Rubrique    
+      category: INFORMATIQUE
+      subUrls:
+        - rubrique_technologie
+        - rubrique_informatique
+        - rubrique_tablettes_tactiles
+    - !leechies.model.Rubrique    
+      category: CONSOLE_JEUX
+      subUrls:
+        - rubrique_jeux_consoles_et_pc
+    - !leechies.model.Rubrique    
+      category: INFORMATIQUE
+      subUrls:
+        - rubrique_technologie
+        - rubrique_informatique
+        - rubrique_tablettes_tactiles
+    - !leechies.model.Rubrique    
+      category: IMAGE_SON
+      subUrls:
+        - rubrique_tv_video
+        - rubrique_appareils_photos
+        - rubrique_appareils_audio
+    - !leechies.model.Rubrique    
+      category: MUSIQUE
+      subUrls:
+        - rubrique_musique
+    - !leechies.model.Rubrique    
+      category: DVD_LIVRES
+      subUrls:
+        - rubrique_cd_dvd_b_ray_vinyls
+        - rubrique_livres_revues_bd
+    - !leechies.model.Rubrique    
+      category: TELEPHONIE
+      subUrls:
+        - rubrique_telephonie
+    - !leechies.model.Rubrique    
+      category: SPORT_HOBBIES
+      subUrls:
+        - rubrique_sports_loisirs
+        - rubrique_velo
+    - !leechies.model.Rubrique    
+      category: COLLECTION
+      subUrls:
+        - rubrique_collections
+    - !leechies.model.Rubrique    
+      category: JEUX_JOUETS
+      subUrls:
+        - rubrique_jouets_jeux_de_societe
+        - rubrique_modelisme
+        - rubrique_armes_airsoft
+    - !leechies.model.Rubrique    
+      category: VIN_GASTRONOMIE
+      subUrls:
+        - rubrique_fruits_et_legumes_du_jardin
+    - !leechies.model.Rubrique    
+      category: ELECTROMENAGER
+      subUrls:
+        - rubrique_electromenager
+    - !leechies.model.Rubrique    
+      category: BRICOLAGE
+      subUrls:
+        - rubrique_bricolage
+    - !leechies.model.Rubrique    
+      category: JARDINAGE
+      subUrls:
+        - rubrique_jardinage
+    - !leechies.model.Rubrique    
+      category: ANIMAUX
+      subUrls:
+        - rubrique_animaux
+    - !leechies.model.Rubrique    
+      category: MAISON_DIVERS
+      subUrls:
+        - rubrique_art_deco
+        - rubrique_bijoux
+        - rubrique_puericulture
+        - rubrique_vide_grenier
+    - !leechies.model.Rubrique    
+      category: TROC
+      subUrls:
+        - rubrique_echange_troc
+    - !leechies.model.Rubrique    
+      category: PERDU_TROUVE
+      subUrls:
+        - rubrique_perdus_trouves
+- !leechies.model.Source
+  rootUrl: https://nautisme.nc/
+  rubriques:
+    - !leechies.model.Rubrique
+      category: VOILIERS
+      subUrls:
+        - rubrique_voiliers
+        - rubrique_catamarans  
+    - !leechies.model.Rubrique
+      category: BATEAUX_MOTEUR
+      subUrls:
+        - rubrique_bateaux_a_moteur
+        - rubrique_motos_marines  
+    - !leechies.model.Rubrique
+      category: NAUTISME_SPORT_LOISIRS
+      subUrls:
+        - rubrique_sports_loisirs
+    - !leechies.model.Rubrique
+      category: PECHE
+      subUrls:
+        - rubrique_accessoires_de_peche
+    - !leechies.model.Rubrique
+      category: NAUTISME_DIVERS
+      subUrls:
+        - rubrique_propulseurs
+        - rubrique_remorques
+        - rubrique_annexes
+        - rubrique_equipement
+        - rubrique_electronique
+        - rubrique_accastillage
+        - rubrique_combies_gilets
+        - rubrique_divers
+- !leechies.model.Source
+  rootUrl: https://automobiles.nc/
+  rubriques:    
+    - !leechies.model.Rubrique    
+      category: VEHICULE_4x4
+      subUrls:
+        - rubrique_4x4  
+    - !leechies.model.Rubrique    
+      category: VOITURES
+      subUrls:
+        - rubrique_voitures
+    - !leechies.model.Rubrique    
+      category: MOTOS
+      subUrls:
+        - rubrique_grosse_cylindree
+        - rubrique_125cm_et_moins
+        - rubrique_scooters_125_et_plus
+    - !leechies.model.Rubrique
+      category: PIECES_DETACHEES
+      subUrls:
+        - rubrique_equipement_moto
+        - rubrique_pieces_detachees_moto 
+    - !leechies.model.Rubrique    
+      category: VEHICULE_DIVERS
+      subUrls:
+        - rubrique_utilitaires_legers
+        - rubrique_quad
+        - rubrique_camions
+        - rubrique_engins
+        - rubrique_divers
