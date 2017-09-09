@@ -1,0 +1,8 @@
+- !leechies.model.Source
+  rootUrl: http://immonc.com/
+  className: leechies.sites.ImmoncSite
+  rubriques:    
+    - !leechies.model.Rubrique    
+      category: VENTES
+      subUrls:
+        - resultat-recherche-nouvelle-caledonie.php?tri=DESC&classe_prix_bas=%25&classe_prix_haut=%25&type_bien=%25&type_annonce=1&niveau=0&page=1&nb_pg=100&idlist=&from=quicksearch&temp=&coche_photo=oui&id_agence=%25&derniere_annonce=oui

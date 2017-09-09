@@ -1,0 +1,58 @@
+- !leechies.model.Source
+  rootUrl: https://mode.nc/
+  className: leechies.sites.GenericWamSite
+  rubriques:    
+    - !leechies.model.Rubrique    
+      category: FEMMES
+      subUrls:
+        - rubrique_femme  
+        - rubrique_lingerie
+        - rubrique_leggings
+        - rubrique_jupes
+        - rubrique_robes  
+        - rubrique_ados_filles
+    - !leechies.model.Rubrique    
+      category: HOMMES
+      subUrls:   
+        - rubrique_homme
+        - rubrique_costumes
+        - rubrique_ados_garcons
+    - !leechies.model.Rubrique    
+      category: BEBES
+      subUrls:
+        - rubrique_bebes
+        - rubrique_maternite
+    - !leechies.model.Rubrique    
+      category: ACCESSOIRES_BIJOUX
+      subUrls:   
+        - rubrique_bijoux
+        - rubrique_sacs  
+        - rubrique_beaute
+        - rubrique_accessoires
+        - rubrique_bijoux_montres 
+    - !leechies.model.Rubrique    
+      category: MODE_DIVERS
+      subUrls:
+        - rubrique_ensembles
+        - rubrique_divers
+        - rubrique_manteaux_vestes
+        - rubrique_pantalons
+        - rubrique_shorts
+        - rubrique_hauts
+        - rubrique_pulls_gilets
+        - rubrique_maillots
+        - rubrique_sportswear
+        - rubrique_chaussures
+        - rubrique_chapeaux
+        - rubrique_manteaux_vestes
+        - rubrique_pantalons
+        - rubrique_chemises
+        - rubrique_shorts
+        - rubrique_hauts
+        - rubrique_pulls_gilets
+        - rubrique_sous_vetements
+        - rubrique_maillots
+        - rubrique_sportswear
+        - rubrique_vetement_de_travail
+        - rubrique_chaussures
+        - rubrique_enfants  

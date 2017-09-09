@@ -39,8 +39,8 @@ public class App {
     public static Instant start = Instant.now();
     public static Duration duration;
 
-	//public static String ALL_SOURCES[] =  { "sources-nautisme.yml", "sources-annonces.yml", "sources-immonc.yml", "sources-mode.yml", "sources-vehicules.yml" };
-	public static String ALL_SOURCES[] =  { "sources-vehicules.yml" };
+	public static String ALL_SOURCES[] =  { "sources-nautisme.yml", "sources-annonces.yml", "sources-immonc.yml", "sources-mode.yml", "sources-vehicules.yml" };
+	//public static String ALL_SOURCES[] =  { "sources-vehicules.yml" };
 	public static String SOURCES[] = ALL_SOURCES;
 
 	// # !!!
