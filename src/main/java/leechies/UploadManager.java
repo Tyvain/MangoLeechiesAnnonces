@@ -101,7 +101,7 @@ public class UploadManager {
         return sb.toString();
     }
 
-    public static boolean uploadAnnonceWithImage(Annonce annonce) {
+    public static void uploadAnnonceWithImage(Annonce annonce) throws IOException {
             AnnonceCleaner.cleanAnnonce(annonce);
         
             String idAd=null;
@@ -111,12 +111,7 @@ public class UploadManager {
              try {
                 idAd = uploadAnnonce(annonce); 
             } catch (IOException e) {
-                annonce.hasError = true;
-                annonce.error = "Err upload AD: " + e.getMessage();
-                deleteAnnonce(idAd);
-                DBManager.saveAnnonce(annonce);
-                logger.error("uploadAnnonceWithImage - Up Ad - " + annonce + "\n" + e);
-                return false;
+            	throw e;
             }
       
             int imageSucceedUpload=0;            
@@ -136,10 +131,7 @@ public class UploadManager {
                 annonce.uploadedTime = new Date();                
             } else { // aucune image -> on delete                 
                     deleteAnnonce(idAd);
-                    return false;
             }
-            DBManager.saveAnnonce(annonce);  
-            return true;
         }
 
     public static String uploadAnnonce(Annonce annonce) throws IOException {

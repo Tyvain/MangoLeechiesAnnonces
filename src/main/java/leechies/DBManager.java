@@ -1,8 +1,6 @@
 package leechies;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.HashSet;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -25,7 +23,7 @@ public class DBManager {
 	private static MongoClient client = new MongoClient(uri);
 	private static MongoDatabase db = client.getDatabase(uri.getDatabase());
 	private static MongoCollection<Document> table = db.getCollection("annonces");
-	private static HashMap<String, Annonce> cache = null;
+	private static HashSet<String> cacheUrls = null;
 	
 	public static void saveAnnonce(Annonce annonce) {
 		try {
@@ -33,46 +31,20 @@ public class DBManager {
 			UpdateOptions options = new UpdateOptions().upsert(true);
 			Bson update =  new Document("$set",annonce.toDocument());
 			table.updateOne(filter, update, options);
-			cache.put(annonce.url, annonce);
+			cacheUrls.add(annonce.url);
 		} catch (Exception e) {
 			logger.error("saveAnnonce: " + e);
 		}
 	}
 
-	public static Map<String, Annonce> getAllAnnoncesMap() {		
-		try {
-			if (cache == null) {
-				cache = new HashMap<>();
-				table.find().forEach((Block<Document>) document -> {
-				Annonce annonce = Annonce.toAnnonce(document);
-				cache.put(annonce.url, annonce);
-				});	 
-			}			
-			return cache;
-		} catch (Exception e) {			
-			logger.error("getAllAnnoncesMap" + e);
-			return null;
-		}
-	}
-
-	public static Stream<Annonce> getAllAnnonces() {
-			return getAllAnnoncesMap().values().stream();		
-	}
-
-    public static Annonce getAnnoncesByUrl(String url) {
-    	return getAllAnnoncesMap().get(url);
-    }
-	
-    public static Stream<Annonce> getAnnoncesByCriteria(Boolean hasError, Boolean isUploaded, Boolean isCommerciale, Boolean hasImages) {
-        return getAllAnnonces()
-        .filter(f -> isCommerciale !=null? f.isCommerciale == isCommerciale:true)
-        .filter(f -> hasImages!=null? (!hasImages && (f.imgs == null || f.imgs.size() == 0)) || (hasImages && f.imgs != null && f.imgs.size() > 0):true)
-        .filter(f -> hasError!=null?f.hasError == hasError:true)
-        .filter(f -> isUploaded!=null? (!isUploaded && f.uploadedTime == null) || (isUploaded && f.uploadedTime != null):true);
-    }
-
 	public static boolean annonceExists(String url) {
-		boolean rez = getAllAnnoncesMap() != null ? getAllAnnoncesMap().containsKey(url) : false;
-		return rez;
+		if (cacheUrls == null) {
+			cacheUrls = new HashSet<>();
+			table.find().forEach((Block<Document>) document -> {
+			Annonce annonce = Annonce.toAnnonce(document);
+			cacheUrls.add(annonce.url);					
+			});	 
+		}			
+		return cacheUrls.contains(url);		
 	}
 }

@@ -26,23 +26,14 @@ public class Annonce implements Serializable {
 
 	public Document toDocument () {
 		return new Document("_id", url)
-				.append("created", created)
-				.append("url", url)
-				.append("imgs", imgs)
-				.append("category", category)
-		        .append("titre", titre)
-		        .append("texte", texte)
-		        .append("prix", prix)
-		        .append("isCommerciale", isCommerciale)
 		        .append("uploadedTime", uploadedTime)
 		        .append("hasError", hasError)
-		        .append("error", error)
-		        .append("ville", ville);
+		        .append("error", error);
 	}
 	
 	public static Annonce toAnnonce (Document doc) {
 		Annonce rez = new Annonce ();
-		rez.url = doc.getString("url");
+		rez.url = doc.getString("_id");
 		rez.uploadedTime = doc.getDate("uploadedTime");
 		return rez;
 	}

@@ -2,12 +2,21 @@ package leechies;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +31,16 @@ import leechies.sites.AbstractSite;
 public class App {
     final static Logger logger = LoggerFactory.getLogger("App");
     
-    public static int statNbAnnoncesTraitees = 0;
     public static int statNbAnnoncesUploadees = 0;    
     public static int statNbAnnoncesAlreadyInDB = 0;
-    public static int statNbAnnoncesAlreadyUploaded = 0;
-    public static int statNbNotAlreadyInDB = 0;
     public static Duration statTotalUploadAdTime = Duration.ZERO;
-    public static AtomicInteger countAnnoncesTraitees = new AtomicInteger();
+    public static AtomicInteger statNbNewAnnonces = new AtomicInteger();
     public static AtomicLong avgTimeByAds = new AtomicLong();
     public static Instant start = Instant.now();
     public static Duration duration;
 
-	public static String ALL_SOURCES[] =  { "sources-immonc.yml", "sources-annonces.yml", "sources-nautisme.yml", "sources-mode.yml", "sources-vehicules.yml" };
-	//public static String ALL_SOURCES[] =  { "sources-vehicules.yml" };
+	//public static String ALL_SOURCES[] =  { "sources-nautisme.yml", "sources-annonces.yml", "sources-immonc.yml", "sources-mode.yml", "sources-vehicules.yml" };
+	public static String ALL_SOURCES[] =  { "sources-vehicules.yml" };
 	public static String SOURCES[] = ALL_SOURCES;
 
 	// # !!!
@@ -44,9 +50,29 @@ public class App {
 	private static int MAX_UPLOAD_ADS = 4000; // max ads on website	
 	private static int LOG_ADS_EVERY  = 10; // log every x ads
 
+	
+	
 	public static void main(String[] args) {
-		
-	 try {
+	try {
+			/* Start of Fix */
+	        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+	            public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+	            public void checkClientTrusted(X509Certificate[] certs, String authType) { }
+	            public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+
+	        } };
+
+	        SSLContext sc = SSLContext.getInstance("SSL");
+	        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+	        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+	        // Create all-trusting host name verifier
+	        HostnameVerifier allHostsValid = new HostnameVerifier() {
+	            public boolean verify(String hostname, SSLSession session) { return true; }
+	        };
+	        // Install the all-trusting host verifier
+	        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+	        /* End of the fix*/
 	    int totalUpAnnonces = UploadManager.countAnnonces();
 	    int diff = totalUpAnnonces - MAX_UPLOAD_ADS;
 	   
@@ -63,16 +89,7 @@ public class App {
 	   initTrace += "\nFORCE_REMOVE_UPLOAD_ADS: " + FORCE_REMOVE_UPLOAD_ADS;
 	   initTrace += "\nMAX_UPLOAD_ADS: " + MAX_UPLOAD_ADS;	    
 	   initTrace += "\n### INFOS ### " ;	    
-	   initTrace += "\n-- Total Ads online: " + totalUpAnnonces;	   	    
-	   initTrace += "\n-- LOCAL DB";
-       initTrace += "\n  - avec images: " + DBManager.getAnnoncesByCriteria(null, null, null, true).count();
-       initTrace += "\n  - sans images: " + DBManager.getAnnoncesByCriteria(null, null, null, false).count();
-       initTrace += "\n  - uploaded: " + DBManager.getAnnoncesByCriteria(null, true, null, null).count();
-       initTrace += "\n  - non uploaded: " + DBManager.getAnnoncesByCriteria(null, false, null, null).count();
-       initTrace += "\n  - commerciales: " + DBManager.getAnnoncesByCriteria(null, null, true, null).count();
-       initTrace += "\n  - non commerciales: " + DBManager.getAnnoncesByCriteria(null, null, false, null).count();
-       initTrace += "\n  - avec erreurs: " + DBManager.getAnnoncesByCriteria(true, null, null, null).count();
-       initTrace += "\n  - sans erreurs: " + DBManager.getAnnoncesByCriteria(false, null, null, null).count();    
+	   initTrace += "\n-- Total Ads online: " + totalUpAnnonces;	
 	    
 	    logger.info(initTrace);
 	   
@@ -88,27 +105,29 @@ public class App {
 		logger.info("Starting goLeech...");
 		App.getSourceStream().flatMap(s -> {
 			return getAnnonceFromSource(s);
-		}).forEach(a -> {
-			DBManager.saveAnnonce(a);
+		}).forEach(a -> {			
 			if (a.hasError == false && a.isCommerciale == false && (a.imgs != null && a.imgs.size() > 0)) {
 				if (a.uploadedTime == null) {
 					Instant startChrono = Instant.now();
-					boolean isUploadSuccess = UploadManager.uploadAnnonceWithImage(a);
-					statTotalUploadAdTime = statTotalUploadAdTime.plus(Duration.between(Instant.now(), startChrono));
-					if (isUploadSuccess) {
+					 try {
+						UploadManager.uploadAnnonceWithImage(a);
+						statTotalUploadAdTime = statTotalUploadAdTime.plus(Duration.between(Instant.now(), startChrono));
 						statNbAnnoncesUploadees++;
-						System.exit(0);
-					}
-				} else {
-					statNbAnnoncesAlreadyUploaded++;
-				}
-				statNbAnnoncesTraitees++;
+					} catch (IOException e) {
+						a.hasError = true;
+		                a.error = "Err upload AD: " + e.getMessage();
+		                // FAUT-ilSUPPRIMER L AONNONCE? 
+		                //UploadManager.deleteAnnonce(a.url);
+		                logger.error("uploadAnnonceWithImage - Up Ad - " + a + "\n" + e);
+					}					
+				} 
 			}
-
+			DBManager.saveAnnonce(a);
+			
 			// on trace toutes les x annonces
 			duration = Duration.between(start, Instant.now());
-			avgTimeByAds.set(duration.getSeconds() / countAnnoncesTraitees.incrementAndGet());
-			if (countAnnoncesTraitees.get() % LOG_ADS_EVERY == 0) {
+			avgTimeByAds.set(duration.getSeconds() / statNbNewAnnonces.incrementAndGet());
+			if (statNbNewAnnonces.get() % LOG_ADS_EVERY == 0) {
 				logStats("");
 			}
 		});
@@ -116,13 +135,11 @@ public class App {
 	}
 
     public static void logStats(String m) {		
-		  String msg = m + "\nNb annonces traitées: " + countAnnoncesTraitees.get() + "\nTemps moyen par annonce: " + avgTimeByAds + " sec";	
+		  String msg = m + "\nNb annonces total: " + (statNbNewAnnonces.get() + statNbAnnoncesAlreadyInDB) + "\nTemps moyen par annonce: " + avgTimeByAds + " sec";	
 		  	msg += "\nTemps total: " + duration.getSeconds() / 60 + " min";
-		  	msg += "\nstatNbAnnoncesTraitees: " + statNbAnnoncesTraitees;
+		  	msg += "\ncountstatNbNewAnnonces: " + statNbNewAnnonces;
 		  	msg += "\nstatNbAnnoncesUploadees: " + statNbAnnoncesUploadees;
-		  	msg += "\nstatNbAnnoncesAlreadyUploaded: " + statNbAnnoncesAlreadyUploaded;
 		  	msg += "\nstatNbAnnoncesAlreadyInDB:" + statNbAnnoncesAlreadyInDB;
-		  	msg += "\nstatNbNotAlreadyInDB:" + statNbNotAlreadyInDB;
 		  	msg += "\nstatTotalUploadAdTime:" + statTotalUploadAdTime;
 		  	if (statNbAnnoncesUploadees != 0) {
 		  		msg += "\navg time upload 1 ad:" + statTotalUploadAdTime.dividedBy(statNbAnnoncesUploadees);

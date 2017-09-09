@@ -2,6 +2,7 @@ package leechies.sites;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,37 +48,35 @@ public abstract class AbstractSite {
 		Stream<String> urlz = idz.map(s -> buildUrl(rootUrl, s));
 
 		// liste des annonces        
-		Stream<Annonce> ret = urlz.map(u -> getAnnonceFromUrl(u, rootUrl, rub));
-		return ret;
+		Stream<Optional<Annonce>> ret = urlz.map(u -> getAnnonceFromUrl(u, rootUrl, rub));
+		
+		Stream<Annonce> filteredList = ret.filter(Optional::isPresent).map(Optional::get);
+		
+		return filteredList;
 	}
 
 	protected String buildUrl(String rootUrl, String s) {
 		return rootUrl + s;
 	}
 
-	protected Annonce getAnnonceFromUrl(String url, String rootUrl, String rub) {
-		String log = "getAnnonceFromUrl: ";		
-		
-		boolean annonceExistsInDb = DBManager.annonceExists(url);
-		log += " annonceExistsInDb -> " + annonceExistsInDb;
-		if (annonceExistsInDb) {
+	protected Optional<Annonce> getAnnonceFromUrl(String url, String rootUrl, String rub) {
+
+		if (!DBManager.annonceExists(url)) {
+			Document doc = getDocumentFromUrl(url);
+			if (doc == null) {
+				Annonce ret = new Annonce();
+				ret.url = url;
+				ret.isCommerciale = true;
+				ret.hasError = true;
+				ret.error = "Impossible de récupérer l'annonce à l'url spécifiée";
+				return Optional.of(ret);
+			}
+			// logger.info(log);
+			return Optional.of(getAnnonce(doc, url, rootUrl, rub));
+		} else {
 			App.statNbAnnoncesAlreadyInDB++;
-			return DBManager.getAnnoncesByUrl(url);
 		}
-		
-		Document doc = getDocumentFromUrl(url);
-		log += " doc == null -> " + doc == null;
-		if (doc == null) {
-			Annonce ret = new Annonce();
-			ret.url = url;
-			ret.isCommerciale = true;
-			ret.hasError = true;
-			ret.error = "Impossible de récupérer l'annonce à l'url spécifiée";
-			return ret;
-		}
-		App.statNbNotAlreadyInDB++;
-		//logger.info(log);
-		return getAnnonce(doc, url, rootUrl, rub);
+		return Optional.empty();
 	}
 
 	protected Annonce getAnnonce(Document doc, String url, String rootUrl, String rub) {
