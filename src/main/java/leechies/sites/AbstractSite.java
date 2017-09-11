@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,10 +82,13 @@ public abstract class AbstractSite {
 
 	protected Annonce getAnnonce(Document doc, String url, String rootUrl, String rub) {
 		Annonce ret = new Annonce();
-		System.out.println("getAnnonce: " + url);
-		// System.out.println("getTitreSelector(): " + getTitreSelector());
-		// System.out.println("select titre: " + doc.select(getTitreSelector()).first());
-		ret.titre = doc.select(getTitreSelector()).first().text();
+		Element titre = doc.select(getTitreSelector()).first();
+		if (titre != null) {
+			ret.titre = titre.text();
+		} else {
+			ret.titre = "Aucun titre";
+			logger.error("Aucune titre trouvé pour l'annonce, -url: " + url  + " -selector: " + getTitreSelector());
+		}
 		ret.texte = doc.select(getTexteSelector()).first().html();
 		ret.category = rub;
 		ret.url = url;
