@@ -39,6 +39,11 @@ public abstract class AbstractSite {
 		// liste des docs (cas des pages contenant les liens)  
 		Document doc = getDocumentFromUrl(rootUrl + rubUrl);
 
+		if (doc == null) {
+			logger.error("Impossible de récupérer le doc: -url: " + rootUrl + rubUrl );
+			logger.error("-link sel: " + getLinkSelector());
+		}
+		
 		// liste des elements (cad liens des annonces)
 		Elements elemz = doc.select(getLinkSelector());
 
