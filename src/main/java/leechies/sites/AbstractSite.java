@@ -36,6 +36,7 @@ public abstract class AbstractSite {
 	 }
 
 	public Stream<Annonce> getAnnonces(String rootUrl, String rubUrl, String rub) {
+		logger.info("getAnnonces: " + rootUrl + rubUrl + " -rub: " + rub);
 		// liste des docs (cas des pages contenant les liens)  
 		Document doc = getDocumentFromUrl(rootUrl + rubUrl);
 
