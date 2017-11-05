@@ -9,6 +9,10 @@ public class AnnonceCleaner {
     public static Annonce cleanAnnonce (Annonce a){
         a.titre = cleanAll(a.titre);
         a.texte = cleanAll(a.texte);
+        
+        // on ajoute l'url à la fin de l'annonce
+        a.texte += "\n\n\nAnnonce d'origine: ";
+        
         a.prix = cleanPrix(a.prix);
         return a;
     }
